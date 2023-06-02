@@ -1,0 +1,44 @@
+
+<div class="row mt-7">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <h1 class="text-center mb-3"><i class="fas fa-sign-in-alt"></i>  Login</h1>
+      {{#if flag}}
+          {{#each errors}}
+              <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                  <strong>{{this}}</strong> 
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+          {{/each}} 
+      {{/if}}
+      <form action="/login" method="POST">
+        <div class="form-group">
+          <label style="color: gray;" for="email">Tên đăng nhập hoặc email</label>
+          <input
+            type="text"
+            id="email"
+            name="email"
+            class="form-control"
+            placeholder="Nhập tên đăng nhập hoặc email"
+            value="{{value.user_name}}"
+          />
+        </div>
+        <div class="form-group">
+          <label style="color: gray;" for="password">Mật khẩu</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            placeholder="Nhập mật khẩu"
+            value="{{value.password}}"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+      </form>
+      <p class="lead mt-4">
+        Bạn chưa có tài khoản? <a href="/register">Đăng ký</a>
+      </p>
+    </div>
+  </div>
+</div>

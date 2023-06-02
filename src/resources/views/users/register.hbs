@@ -1,0 +1,68 @@
+<div class="row mt-7">
+  <div class="col-md-6 m-auto">
+    <div class="card card-body">
+      <h1 class="text-center mb-3">
+        <i class="fas fa-user-plus"></i> Đăng ký
+      </h1>
+      {{#if flag}}
+        {{#each errors}}
+          <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <strong>{{this}}</strong> 
+            <button type="button" class="btn-close"  data-bs-dismiss="alert"  aria-label="Close"></button>
+          </div>
+        {{/each}}
+      {{/if}}
+      <!-- <%= include ("./partials/messages"); %> -->
+      <form action="/register" method="POST">
+        <div class="form-group">
+          <label style="color:gray;" for="name">Tên đăng nhập</label>
+          <input
+            type="name"
+            id="user_name"
+            name="user_name"
+            class="form-control"
+            placeholder="Nhập tên đăng nhập"
+            value="{{value.user_name}}"
+          />
+        </div>
+        <div class="form-group">
+          <label style="color:gray;" for="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            class="form-control"
+            placeholder="Nhập Email"
+            value="{{value.email}}"
+          />
+        </div>
+        <div class="form-group">
+          <label style="color:gray;" for="password">Mật khẩu</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            class="form-control"
+            placeholder="Tạo mật khẩu"
+            value="{{value.password}}"
+          />
+        </div>
+        <div class="form-group">
+          <label style="color:gray;" for="password2">Nhập lại mật khẩu</label>
+          <input
+            type="password"
+            id="password2"
+            name="password2"
+            class="form-control"
+            placeholder="Xác nhận mật khẩu"
+            value="{{value.password2}}"
+          />
+        </div>
+        <button type="submit" class="btn btn-primary btn-block">
+          Đăng ký
+        </button>
+      </form>
+      <p class="lead mt-4">Bạn đã có tài khoản? <a href="/login">Đăng nhập</a></p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,141 @@
+<p style="display: none;">{{user_name}}</p>
+<p id="time" style="display: none;">{{buy1.createdAt}}</p>
+<div class="container abc">
+            <div id="thongbao" class="alert alert-danger d-none face" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <div class="card">
+                <div class="container-fliud">
+                    
+                    <form name="frmsanphamchitiet" id="frmsanphamchitiet" action="" method="POST">
+                        <input type="hidden" name="sp_ma" id="sp_ma" value="">
+                        <input type="hidden" name="sp_ten" id="sp_ten" value="">
+                        <input type="hidden" name="sp_gia" id="sp_gia" value="">
+                        <input type="hidden" name="hinhdaidien" id="hinhdaidien" value="">
+
+                        <div class="wrapper row">
+                            <div class="preview col-md-6">
+                                <div class="preview-pic tab-content">
+                                        <img class="img_sp1" src="https://cdn.tgdd.vn/hoi-dap/1250353/Thumbnail/che-do-tab-an-danh-la-gi-cach-bat-tat-tren-trinh-duyet-th.jpg">
+                                </div>
+                            </div>
+                            <div class="details col-md-6">
+                                <p><strong>User name:</strong> {{buy1.user_name}}</p>
+                                <p><strong>Email:</strong> {{buy1.email}}</p>
+                                <p><strong>Mật khẩu:</strong> {{buy1.password}}</p>
+                                <p><strong>Tên:</strong> {{buy1.full_name}}</p>
+                                <p><strong>Địa chỉ:</strong> {{buy1.address}}</p>
+                                <p><strong>Số điện thoại:</strong> {{buy1.phone}}</p>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <div style="display: flex;" class="card">
+                <p id="created"><strong>Ngày tạo tài khoản:</strong> </p>
+            </div>
+
+        <script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const total = document.querySelectorAll('.total')
+        const totalO = document.querySelectorAll('.totalO')
+        const time = document.querySelector('#time')
+        const created = document.querySelector('#created')
+        console.log(created)
+        for(var i = 0; i < total.length; i++)
+        if(total[i].innerHTML != totalO[i].innerHTML)
+        totalO[i].style.display = 'contents'
+        
+            switch(time.innerHTML.slice(0, 3)){
+                case 'Mon':{
+                    var thu = 'Thứ hai'
+                    break;
+                }
+                case 'Tus':{
+                    var thu = 'Thứ ba'
+                    break;
+                }
+                case 'Wed':{
+                    var thu = 'Thứ tư'
+                    break;
+                }
+                case 'Thu':{
+                    var thu = 'Thứ năm'
+                    break;
+                }
+                case 'Fri':{
+                    var thu = 'Thứ Sáu'
+                    break;
+                }
+                case 'Sat':{
+                    var thu = 'Thứ bảy'
+                    break;
+                }
+                case 'Sun':{
+                    var thu = 'Chủ nhật'
+                    break;
+                }
+            }
+            switch(time.innerHTML.slice(4, 7)){
+                case 'Jan':{
+                    var thang = '01'
+                    break;
+                }
+                case 'Feb':{
+                    var thang = '02'
+                    break;
+                }
+                case 'Mar':{
+                    var thang = '03'
+                    break;
+                }
+                case 'Apr':{
+                    var thang = '04'
+                    break;
+                }
+                case 'May':{
+                    var thang = '05'
+                    break;
+                }
+                case 'Jun':{
+                    var thang = '06'
+                    break;
+                }
+                case 'Jul':{
+                    var thang = '07'
+                    break;
+                }
+                case 'Aug':{
+                    var thang = '08'
+                    break;
+                }
+                case 'Sep':{
+                    var thang = '09'
+                    break;
+                }
+                case 'Oct':{
+                    var thang = '10'
+                    break;
+                }
+                case 'Nov':{
+                    var thang = '11'
+                    break;
+                }
+                case 'Dec':{
+                    var thang = '12'
+                    break;
+                }
+            }
+            var ngay = time.innerHTML.slice(8, 10)
+            var nam = time.innerHTML.slice(11, 15)
+            var gio = time.innerHTML.slice(16, 24)
+            
+            created.innerHTML = '[' + gio + ' | ' + thu + ', Ngày ' + ngay + '/' + thang + '/' + nam + ']'
+            
+    })
+</script>

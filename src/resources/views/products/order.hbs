@@ -1,0 +1,152 @@
+<div class="accordion mt-7" id="accordionExample">
+    
+{{#each buy1}}
+  <div style="background-color: rgba(0,0,0,0);" class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{@index}}" aria-expanded="true" aria-controls="collapse{{@index}}">
+        <p>Đơn hàng thứ {{this.stt}}</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p>[{{this.payment}}]</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p id="time">[{{this.createdAt}}]</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p>[Mã hóa đơn: {{this._id}}]</p>
+      </button>
+    </h2>
+    <div id="collapse{{@index}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="color:aqua;" class="text-center">STT</th>
+                                <th style="color:aqua;" class="text-center">Ảnh</th>
+                                <th style="color:aqua;" class="text-center">Tên sản phẩm</th>
+                                <th style="color:aqua;" class="text-center">Đơn giá</th>
+                                <th style="color:aqua;" class="text-center">Số lượng</th>
+                            </tr>
+                        </thead>
+                        <tbody id="datarow">
+                        {{#each products}}
+                            <tr class="product">
+                                <td style="color:aqua;" class="text-center">{{sum @index 1}} </td>
+                                <td class="text-center">
+                                    <img style="width 80px; height: 80px; color:aqua;" src="{{this.img}}">
+                                </td>
+                                <td style="color:aqua;"><a class="hover" style="color: aqua;" href="/product/{{this.name}}">{{this.name}}</a></td>
+                                <td style="color:aqua;" class="text-center"><span class="gia_cart">{{this.price}}</span><sup>₫</sup> </td>
+                                <td style="color:aqua;" class="text-center">{{this.quantity}}</td>
+                            </tr>
+                        {{/each}}
+                            <div style="text-align: right;">
+                                <tr>
+                                    <td style="color:aqua;" class="text-center">Tổng tiền: </td>
+                                    <td></td><td></td>
+                                    <td style="color:aqua;" class="text-center">
+                                        <small  class="text-muted"><s><span class="totalO">{{this.total.old}}</span><sup>₫</sup></s></small>
+                                        <p><span class="total">{{this.total.new}}</span><sup>₫</sup></p>
+                                    </td>
+                                </tr>
+                            </div>
+                        </tbody>
+                        
+                    </table>
+      </div>
+    </div>
+  </div>
+{{/each}}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const total = document.querySelectorAll('.total')
+        const totalO = document.querySelectorAll('.totalO')
+        const time = document.querySelectorAll('#time')
+
+        for(var i = 0; i < total.length; i++)
+        if(total[i].innerHTML != totalO[i].innerHTML)
+        totalO[i].style.display = 'contents'
+        
+        time.forEach(function(time){
+            switch(time.innerHTML.slice(1, 4)){
+                case 'Mon':{
+                    var thu = 'Thứ hai'
+                    break;
+                }
+                case 'Tus':{
+                    var thu = 'Thứ ba'
+                    break;
+                }
+                case 'Wed':{
+                    var thu = 'Thứ tư'
+                    break;
+                }
+                case 'Thu':{
+                    var thu = 'Thứ năm'
+                    break;
+                }
+                case 'Fri':{
+                    var thu = 'Thứ Sáu'
+                    break;
+                }
+                case 'Sat':{
+                    var thu = 'Thứ bảy'
+                    break;
+                }
+                case 'Sun':{
+                    var thu = 'Chủ nhật'
+                    break;
+                }
+            }
+            switch(time.innerHTML.slice(5, 8)){
+                case 'Jan':{
+                    var thang = '01'
+                    break;
+                }
+                case 'Feb':{
+                    var thang = '02'
+                    break;
+                }
+                case 'Mar':{
+                    var thang = '03'
+                    break;
+                }
+                case 'Apr':{
+                    var thang = '04'
+                    break;
+                }
+                case 'May':{
+                    var thang = '05'
+                    break;
+                }
+                case 'Jun':{
+                    var thang = '06'
+                    break;
+                }
+                case 'Jul':{
+                    var thang = '07'
+                    break;
+                }
+                case 'Aug':{
+                    var thang = '08'
+                    break;
+                }
+                case 'Sep':{
+                    var thang = '09'
+                    break;
+                }
+                case 'Oct':{
+                    var thang = '10'
+                    break;
+                }
+                case 'Nov':{
+                    var thang = '11'
+                    break;
+                }
+                case 'Dec':{
+                    var thang = '12'
+                    break;
+                }
+            }
+            var ngay = time.innerHTML.slice(9, 11)
+            var nam = time.innerHTML.slice(12, 16)
+            var gio = time.innerHTML.slice(17, 25)
+            time.innerHTML = '[' + gio + ' | ' + thu + ', Ngày ' + ngay + '/' + thang + '/' + nam + ']'
+        })
+        
+
+    })
+</script>

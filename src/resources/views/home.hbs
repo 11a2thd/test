@@ -1,0 +1,206 @@
+<p style="display: none;">{{user_name}}</p>
+<body class="body mt-7">
+<div>
+    <div style="display: flex;" class="home">
+      
+        <main>
+                  <div style="display: flex;" class="lbl-cnt mr-auto"> <span style="color: aliceblue;" class="lbl">Sắp xếp&nbsp;</span>
+                    <div class="fld inline">
+                      <div class="dropdown dropdown-small dropdown-med dropdown-white inline">
+                        <button style="background-color: aliceblue;}" 
+                          data-toggle="dropdown" type="button" class="btn dropdown-toggle sort" fdprocessedid="6gvpc9">Mới nhất</button>
+                        <ul role="menu" class="dropdown-menu sort_list">
+                          <li role="presentation" class="ml-2"><a href="/" class="sortli">Mới nhất</a></li>
+                          <li role="presentation" class="ml-2"><a href="sort_by/oldest" class="oldest sortli">Cũ nhất</a></li>
+                          <li role="presentation" class="ml-2"><a href="sort_by/price-ascending" class="price-ascending sortli">Giá tăng dần</a></li>
+                          <li role="presentation" class="ml-2"><a href="sort_by/price-descending" class="price-descending sortli">Giá giảm dần</a></li>
+                          <li role="presentation" class="ml-2"><a href="sort_by/price-lower-20" class="price-lower-20 sortli">Dưới 20 triệu</a></li>
+                          <li role="presentation" class="ml-2"><a href="sort_by/price-20-to-40" class="price-20-to-40 sortli">Từ 20 - 40 triệu</a></li>
+                          <li role="presentation" class="ml-2"><a href="sort_by/price-40-to-70" class="price-40-to-70 sortli">Từ 40 - 70 triệu</a></li>
+                          <li role="presentation" class="ml-2"><a href="sort_by/price-upper-70" class="price-upper-70 sortli">Trên 70 triệu</a></li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+            {{#each product}}
+                <div class="sanPham" align="center">
+                    <form id="{{this._id}}" class="putCart" action="{{this._id}}/?_method=PUT" method="POST">
+                    <a class="alink_anh" href="/product/{{this.name}}/{{this._id}}"><div class="img_sp link_anh" style="background-image: url({{this.img}});" ></div></a>
+                    <div class="thongTin">
+                        <a class="aten_sp" href="/product/{{this.name}}/{{this._id}}"><h3 class="ten_sp">{{this.name}}</h3></a>
+                        <p style="font-size: 14px;" class="sl">Số lượng:&nbsp;</p><p style="font-size: 14px;" class="sl sl_value">{{this.quantity}}</p><br>
+                        <p style="font-size: 14px;"class="gia">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Giá:&nbsp;</p><p style="font-size: 14px;"class="gia gia_value">{{this.price}}</p><p style="font-size: 14px;"class="gia">&nbsp;đ&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</p>
+                        <button class="btn GH_btn"  style="background-color: aqua;" data-id="{{this.name}}">Thêm vào giỏ hàng</button>
+                    </div>
+                    </form>
+                </div>
+        {{/each}} 
+            
+            
+        </main>
+        
+    </div>
+        
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+
+  const URL = window.location.href
+  const sort = document.querySelector('.sort')
+  const sort_list = document.querySelector('.sort_list')
+  const sanPham = document.querySelectorAll('.sanPham')
+  const main = document.querySelector('main')
+  const putCart = document.querySelectorAll('.putCart')
+  const GH_btn = document.querySelectorAll('.GH_btn')
+  const alink_anh = document.querySelectorAll('.alink_anh')
+  const aten_sp = document.querySelectorAll('.aten_sp')
+  const ten_sp = document.querySelectorAll('.ten_sp')
+  const sortli = document.querySelectorAll('.sortli')
+  const user_name = document.querySelector('p').innerHTML
+  console.log(user_name)
+
+  if(URL === 'http://localhost:3000/'){
+    GH_btn.forEach(function(btn){
+      btn.style.display = 'none'
+    })
+  }
+  if(URL.includes('/admin/')){
+
+    GH_btn.forEach(function(btn, index){
+      btn.style.display = 'none'
+      alink_anh[index].attributes.href.value = '/product/admin/' + ten_sp[index].innerHTML + '/' + putCart[index].id
+      aten_sp[index].attributes.href.value = '/product/admin/' + ten_sp[index].innerHTML + '/' + putCart[index].id
+    })
+    if(URL.includes('/sort_by/')){
+      
+      putCart.forEach(putCart => {
+        putCart.action = URL.slice(35) + '/' + putCart.id + '/?_method=PUT'
+      })
+    }
+  }
+  if(URL.includes('/user/')){
+    alink_anh.forEach(function(alink_anh, index){
+      alink_anh.attributes.href.value = '/product/' + URL.slice(22) + '/' + ten_sp[index].innerHTML + '/' + putCart[index].id
+      aten_sp[index].attributes.href.value = '/product/' + URL.slice(22) + '/' + ten_sp[index].innerHTML + '/' + putCart[index].id
+    })
+    putCart.forEach(putCart => {
+        putCart.action = '/user/' + user_name  + '/' + putCart.id + '/?_method=PUT'
+    })
+    sortli.forEach(function(sort, index){
+      sort.attributes.href.value += ('/user/' + user_name)
+
+    })
+    if(URL.includes('/sort_by/')){
+      if(URL.includes('/oldest/'))
+      sort.innerHTML = sort_list.querySelector('.oldest').innerHTML
+      if(URL.includes('/price-ascending/'))
+      sort.innerHTML = sort_list.querySelector('.price-ascending').innerHTML
+      if(URL.includes('/price-descending/'))
+      sort.innerHTML = sort_list.querySelector('.price-descending').innerHTML
+      if(URL.includes('/price-20-to-40/'))
+      sort.innerHTML = sort_list.querySelector('.price-20-to-40').innerHTML
+      if(URL.includes('/price-lower-20/'))
+      sort.innerHTML = sort_list.querySelector('.price-lower-20').innerHTML
+      if(URL.includes('/price-40-to-70/'))
+      sort.innerHTML = sort_list.querySelector('.price-40-to-70').innerHTML
+      if(URL.includes('/price-upper-70/'))
+      sort.innerHTML = sort_list.querySelector('.price-upper-70').innerHTML
+      putCart.forEach(putCart => {
+        putCart.action = URL.slice(35)  + '/' + putCart.id + '/?_method=PUT'
+      })
+    }
+  }
+  
+  //sang trang
+  var k = 0
+  var j = 0
+  var page_a = []
+  var page_li = []
+  for(var i = 0; i <= (sanPham.length / 10) ; i++){
+    const san_pham = document.createElement('div');
+    k += 10
+    if(k >= sanPham.length) k = sanPham.length
+    for(j; j < k; j++){
+      san_pham.appendChild(sanPham[j])
+    }
+    document.body.appendChild(san_pham);
+    san_pham.classList.add('san_pham')
+    
+    page_a[i] = document.createElement('a')
+    page_a[i].classList.add('page-link')
+    page_a[i].innerHTML = i + 1
+    page_li[i] = document.createElement('li')
+    page_li[i].classList.add('page-item')
+    
+    page_li[i].appendChild(page_a[i])
+    
+    if(i > 0) san_pham.style.display = 'none'
+    if(j === sanPham.length && page_a.length > 1){
+      san_pham.insertAdjacentHTML('afterend', `<div>
+              <nav aria-label="Page navigation example">
+                <ul class="pagination" style="margin-left: 700px;">
+                  <li class="page-item">
+                    <a class="page-link" style="color: #007bff;" aria-label="Previous">
+                      <span aria-hidden="true">&laquo;</span>
+                    </a>
+                  </li>
+                  <div class="page">
+                  
+                  </div>
+                  <li class="page-item">
+                    <a class="page-link" style="color: #007bff;" aria-label="Next">
+                      <span aria-hidden="true">&raquo;</span>
+                    </a>
+                  </li>
+                </ul>
+              </nav>
+            </div>`)
+            for(var i = 0; i <= (sanPham.length / 10) ; i++){
+              document.querySelector('.page').appendChild(page_li[i])
+            }
+    }
+    
+  }
+  const san_pham = document.querySelectorAll('.san_pham')
+  const page = document.querySelectorAll('.page-link')
+
+
+  if(sanPham.length > 10)
+  page[1].classList.add('this-page')
+  page.forEach(function(page, index, element) {
+    page.onclick = function(){
+      if(page.innerHTML !== '...' && index !== 0 && index !== (element.length - 1)){
+        document.querySelector('.page-link.this-page').classList.remove("this-page");
+        page.classList.add('this-page')
+        san_pham.forEach((san_pham) => {
+          if(san_pham.style.display !== 'none') san_pham.style.display = 'none'
+        })
+        san_pham[Number(page.innerHTML) - 1].style.display = 'flex'
+      }
+      if(index === 0 && document.querySelector('.this-page').innerHTML !== '1'){
+        var a = Number(document.querySelector('.this-page').innerHTML) - 1
+        document.querySelector('.page-link.this-page').classList.remove("this-page");
+        element[a].classList.add('this-page')
+        san_pham.forEach((san_pham) => {
+          if(san_pham.style.display !== 'none') san_pham.style.display = 'none'
+        })
+        san_pham[Number(element[a].innerHTML) - 1].style.display = 'flex'
+      }
+      if(index === (element.length - 1) && Number(document.querySelector('.this-page').innerHTML) !== element.length - 2){
+        var a = Number(document.querySelector('.this-page').innerHTML) + 1
+        document.querySelector('.page-link.this-page').classList.remove("this-page");
+        element[a].classList.add('this-page')
+        san_pham.forEach((san_pham) => {
+          if(san_pham.style.display !== 'none') san_pham.style.display = 'none'
+        })
+        san_pham[Number(element[a].innerHTML) - 1].style.display = 'flex'
+      }
+    }
+  })
+
+
+})
+</script>
+
+</body>

@@ -1,0 +1,152 @@
+<div class="accordion mt-7" id="accordionExample">
+    
+{{#each users}}
+  <div style="background-color: rgba(0,0,0,0);" class="accordion-item">
+    <h2 class="accordion-header">
+      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{@index}}" aria-expanded="true" aria-controls="collapse{{@index}}">
+        <p>User: {{this.user_name}}</p>&nbsp;&nbsp;&nbsp;&nbsp;<p id="time">[{{this.createdAt}}]</p>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p>[ID Nguoi dung: {{this._id}}]</p>
+      </button>
+    </h2>
+    <div id="collapse{{@index}}" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+      <div class="accordion-body">
+        <ul class="list-group">
+            <li style="color: bisque;" class="list-group-item pngBG" id="hoTen">Họ và tên: </li>
+            <li style="color: bisque;" class="list-group-item pngBG" id="user_name">Tên đang nhập: {{this.user_name}}</li>
+            <li style="color: bisque;" class="list-group-item pngBG" id="email">Email: {{this.email}}</li>
+            <li style="color: bisque;" class="list-group-item pngBG" id="matKhau">Mật khẩu: {{this.password}}<small class="header_ul-li2" id="ie">&nbsp;&nbsp;&nbsp;(icon con mắt)</small></li>
+            <li style="color: bisque;" class="list-group-item pngBG" id="">Số điện thoại: </li>
+             <li style="color: bisque;" class="list-group-item pngBG" id="">Địa chỉ: </li>
+              <li style="color: bisque;" class="list-group-item pngBG" id="">And a fifth one</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+{{/each}}
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function(){
+        const time = document.querySelectorAll('#time')
+        const hoTen = document.querySelectorAll('#hoTen')
+        const user_name = document.querySelectorAll('#user_name')
+        const email = document.querySelectorAll('#email')
+        const matKhau = document.querySelectorAll('#matKhau')
+        const ie = document.querySelectorAll('#ie')
+        const accordion_button = document.querySelectorAll('.accordion-button')
+        var passCen = []
+        const passUncen = []
+        
+        matKhau.forEach(function(mk, index){
+            passUncen[index] = mk.childNodes[0].data.slice(10)
+            for(var i = 0; i < mk.childNodes[0].data.slice(10).length; i++){
+                if(i !== 0)
+                passCen[index] += '*'
+                else passCen[index] = '*'
+            }
+            mk.childNodes[0].data = 'Mật khẩu: ' + passCen[index]
+        })
+        ie.forEach(function(ie, index){
+            ie.onclick = function(){
+                if(matKhau[index].childNodes[0].data.slice(10, 16) === '******')
+                matKhau[index].childNodes[0].data = 'Mật khẩu: ' + passUncen[index]
+                else matKhau[index].childNodes[0].data = 'Mật khẩu: ' + passCen[index]
+            }
+        })
+
+        accordion_button.forEach(function(accordion_button, index){
+            accordion_button.onclick = function(){
+                if(matKhau[index].childNodes[0].data.slice(10, 16) !== '******')
+                matKhau[index].childNodes[0].data = 'Mật khẩu: ' + passCen[index]
+            }
+        })
+
+        time.forEach(function(time){
+            switch(time.innerHTML.slice(1, 4)){
+                case 'Mon':{
+                    var thu = 'Thứ hai'
+                    break;
+                }
+                case 'Tus':{
+                    var thu = 'Thứ ba'
+                    break;
+                }
+                case 'Wed':{
+                    var thu = 'Thứ tư'
+                    break;
+                }
+                case 'Thu':{
+                    var thu = 'Thứ năm'
+                    break;
+                }
+                case 'Fri':{
+                    var thu = 'Thứ Sáu'
+                    break;
+                }
+                case 'Sat':{
+                    var thu = 'Thứ bảy'
+                    break;
+                }
+                case 'Sun':{
+                    var thu = 'Chủ nhật'
+                    break;
+                }
+            }
+            switch(time.innerHTML.slice(5, 8)){
+                case 'Jan':{
+                    var thang = '01'
+                    break;
+                }
+                case 'Feb':{
+                    var thang = '02'
+                    break;
+                }
+                case 'Mar':{
+                    var thang = '03'
+                    break;
+                }
+                case 'Apr':{
+                    var thang = '04'
+                    break;
+                }
+                case 'May':{
+                    var thang = '05'
+                    break;
+                }
+                case 'Jun':{
+                    var thang = '06'
+                    break;
+                }
+                case 'Jul':{
+                    var thang = '07'
+                    break;
+                }
+                case 'Aug':{
+                    var thang = '08'
+                    break;
+                }
+                case 'Sep':{
+                    var thang = '09'
+                    break;
+                }
+                case 'Oct':{
+                    var thang = '10'
+                    break;
+                }
+                case 'Nov':{
+                    var thang = '11'
+                    break;
+                }
+                case 'Dec':{
+                    var thang = '12'
+                    break;
+                }
+            }
+            var ngay = time.innerHTML.slice(9, 11)
+            var nam = time.innerHTML.slice(12, 16)
+            var gio = time.innerHTML.slice(17, 25)
+            time.innerHTML = '[' + gio + ' | ' + thu + ', Ngày ' + ngay + '/' + thang + '/' + nam + ']'
+        })
+        
+
+    })
+</script>

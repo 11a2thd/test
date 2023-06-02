@@ -1,0 +1,309 @@
+     <p style="display: none;">{{user_name}}</p>   
+        <div id="cart" class="container mt-7">
+            <div id="thongbao" class="alert alert-danger d-none face" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+
+            <h1 class="text-center">Giỏ hàng</h1>
+            <div class="row">
+                <div class="col col-md-12">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th style="color:aqua;" class="text-center">STT</th>
+                                <th style="color:aqua;" class="text-center">Ảnh</th>
+                                <th style="color:aqua;" class="text-center">Tên sản phẩm</th>
+                                <th style="color:aqua;" class="text-center">Đơn giá</th>
+                                <th style="color:aqua;" class="text-center">Số lượng</th>
+                                <th style="color:aqua;" class="text-center">Chọn</th>
+                                <th style="color:aqua;" class="text-center"></th>
+                            </tr>
+                        </thead>
+                        <tbody id="datarow">
+                        {{#each buy}}
+                            <tr class="product">
+                                <td style="color:aqua;" class="text-center">{{sum @index 1}} </td>
+                                <td class="text-center">
+                                    <img style="width: 80px; color:aqua;" src="{{this.img}}" class="">
+                                </td>
+                                <td style="color:aqua;"><a class="hover link_p" style="color: aqua;" href="/{{this.name}}/{{this._id}}">{{this.name}}</a></td>
+                                <td style="color:aqua;" class="text-center"><span class="gia_cart">{{this.price}}</span><sup>₫</sup> </td>
+                                <td style="color:aqua;" class="text-center">
+                                    <div class="buttons_added">
+                                        <input class="minus is-form" type="button" value="-">
+                                        <input aria-label="quantity" class="input-qty sl_cart" max="{{this.quantity.maxValue}}" min="1" name="" type="number" value="{{this.quantity.value}}">
+                                        <input class="plus is-form" type="button" value="+">
+                                    </div>
+                                </td>
+                                <td class="text-center"><input class="check_cart" id="{{this._id}}" name="check" type="checkbox" type="radio" {{this.check}}></td>
+                                <td style="color:aqua;" class="text-center"><a id="{{this._id}}" class="text-delete">Xóa</a></td>
+                            </tr>
+                        {{/each}}
+                            <div style="text-align: right;">
+                                <tr>
+                                    <td style="color:aqua;" class="text-center">Tổng tiền: </td>
+                                    <td></td><td></td>
+                                    <td style="color:aqua;" class="text-center">
+                                        <small style="display: none;" class="text-muted"><s><span id="totalO">0</span><sup>₫</sup></s></small>
+                                        <p><span id="total">0</span><sup>₫</sup></p>
+                                    </td>
+                                    <td></td><td class="text-center"><input id="checkAll" name="checkAll" type="checkbox" type="radio" ></td>
+                                    <td id="xoa" style="color:aqua;" class="text-center text-delete-all">Xóa tất cả</td>
+                                </tr>
+                            </div>
+                        </tbody>
+                        
+                    </table>
+                    
+                    <a href="/" class="btn btn-warning btn-md">&nbsp;Quay
+                        về trang chủ</a>
+                    <a href="/payment/user/{{user_name}}" id="thanhToan" class="btn btn-primary btn-md">&nbsp;Thanh toán</a>
+                </div>
+            </div>
+        </div>
+<h1 id="emptyCart" style="display: none;" class="text-center mt-7">GIỎ HÀNG TRỐNG</h1>
+
+ {{!-- Form xoá sản phẩm  --}}
+<form name="del-text" method="POST"></form>
+{{!-- Form ô checkbox --}}
+<form name="check" method="POST"></form>
+{{!-- Form thanh toán --}}
+<form name="payment" method="POST"></form>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+    
+    const URL = window.location.href
+    var tong = 0
+    var dem = 0
+    var check = $('input[name="check"]')
+    var checkAll = $('#checkAll')
+    var checkForm = document.forms['check']
+    var delForm = document.forms['del-text']
+    const gia_cart = document.querySelectorAll('.gia_cart')
+    const sl_cart = document.querySelectorAll('.sl_cart')
+    const check_cart = document.querySelectorAll('.check_cart')
+    const checkAll_cart = document.querySelector('#checkAll')
+    const total = document.querySelector('#total')
+    const emptyCart = document.querySelector('#emptyCart')
+    const cart = document.querySelector('#cart')
+    const totalO = document.querySelector('#totalO')
+    const product = document.querySelectorAll('.product')
+    const plus = document.querySelectorAll('.plus')
+    const minus = document.querySelectorAll('.minus')
+    const link_p = document.querySelectorAll('.link_p')
+    const paymentForm = document.querySelector('.payment')
+    const user_name = document.querySelector('p').innerHTML
+    
+    link_p.forEach(function(item){
+        var a = item.attributes.href.value
+        item.attributes.href.value = 'http://localhost:3000/product/user/' + user_name + a
+    })
+
+    if(product.length === 0){
+        emptyCart.style.display = 'block'
+        cart.style.display = 'none'
+    }
+
+
+    checkAll.prop('checked', check.length == $('input[name="check"]:checked').length && check.length != 0)
+    checkAll.change(function(){
+        check.prop('checked', $(this).prop('checked'))
+    })
+    
+    check.change(function(){
+        checkAll.prop('checked', check.length == $('input[name="check"]:checked').length)
+        
+    })
+
+    check_cart.forEach(function(check, index){
+            
+            if(check.checked){
+                console.log("Testing1");
+                for(var i = 0; i < gia_cart[index].innerHTML.length; i++){
+                    var c = gia_cart[index].innerHTML
+                    var gia = '', e = 0
+                    for(var j = 0; j < c.length; j++)
+                    if(c[j] === '.'){
+                        gia += c.slice(e, j)
+                        e = j + 1
+                    }
+                    gia += c.slice(e, c.length)
+                }
+                
+                tong += (Number(gia) * Number(sl_cart[index].value));
+                
+                
+            }
+            if(check_cart.length === (index + 1)){
+                console.log("Testing2");
+                tong = String(tong)
+                for(var i = tong.length - 3; i > 0; i -= 3)
+                tong = tong.slice(0, i) + '.' + tong.slice(i)
+                total.innerHTML = tong
+
+            }
+    })
+
+    // Checkbox xoá hết sản phẩm
+    document.querySelector('.text-delete-all').onclick = function(){
+        delForm.action = URL.slice(32) + '/del/' + document.querySelector('.text-delete-all').id + '?_method=PUT'
+        delForm.submit()
+    }
+    
+    // Checkbox xoá từng sản phẩm
+    document.querySelectorAll('.text-delete').forEach(function(textDelete){
+        textDelete.onclick = function(){
+            delForm.action = URL.slice(32) + '/del/' + textDelete.id + '/?_method=PUT'
+            delForm.submit()
+        }
+    })
+        
+    
+
+    checkAll_cart.onclick = function(){
+        if(checkAll_cart.checked){
+            var tong = 0
+            gia_cart.forEach(function(_gia, index){
+                for(var i = 0; i < _gia.innerHTML.length; i++){
+                    var c = _gia.innerHTML
+                    var gia = '', e = 0
+                    for(var j = 0; j < c.length; j++)
+                    if(c[j] === '.'){
+                        gia += c.slice(e, j)
+                        e = j + 1
+                    }
+                    gia += c.slice(e, c.length)
+                }
+                tong += (Number(gia) * Number(sl_cart[index].value))
+            })
+            
+            tong = String(tong)
+            for(var i = tong.length - 3; i > 0; i -= 3)
+            tong = tong.slice(0, i) + '.' + tong.slice(i)
+            total.innerHTML = tong       
+        }
+        else{
+            total.innerHTML = '0'
+            totalO.innerHTML = '0'
+        }
+        
+    }
+    
+    check_cart.forEach(function(check, index){
+        check.onclick = function(){
+            var tong = 0
+            if(check.checked){
+                for(var i = 0; i < totalO.innerHTML.length; i++){
+                    var c = totalO.innerHTML
+                    var gia = '', e = 0
+                    for(var j = 0; j < c.length; j++)
+                    if(c[j] === '.'){
+                        gia += c.slice(e, j)
+                        e = j + 1
+                    }
+                    gia += c.slice(e, c.length)
+                }
+                tong = Number(gia)
+                for(var i = 0; i < gia_cart[index].innerHTML.length; i++){
+                    var c = gia_cart[index].innerHTML
+                    var gia = '', e = 0
+                    for(var j = 0; j < c.length; j++)
+                    if(c[j] === '.'){
+                        gia += c.slice(e, j)
+                        e = j + 1
+                    }
+                    gia += c.slice(e, c.length)
+                }
+                tong += (Number(gia) * Number(sl_cart[index].value))
+            }
+            else{
+                for(var i = 0; i < totalO.innerHTML.length; i++){
+                    var c = totalO.innerHTML
+                    var gia = '', e = 0
+                    for(var j = 0; j < c.length; j++)
+                    if(c[j] === '.'){
+                        gia += c.slice(e, j)
+                        e = j + 1
+                    }
+                    gia += c.slice(e, c.length)
+                }
+                var tong = Number(gia)
+                for(var i = 0; i < gia_cart[index].innerHTML.length; i++){
+                    var c = gia_cart[index].innerHTML
+                    var gia = '', e = 0
+                    for(var j = 0; j < c.length; j++)
+                    if(c[j] === '.'){
+                        gia += c.slice(e, j)
+                        e = j + 1
+                    }
+                    gia += c.slice(e, c.length)
+                }
+                tong -= (Number(gia) * Number(sl_cart[index].value))
+            }
+            
+            tong = String(tong)
+            for(var i = tong.length - 3; i > 0; i -= 3)
+            tong = tong.slice(0, i) + '.' + tong.slice(i)
+            total.innerHTML = tong
+        }
+    })
+
+    
+    // lắng nghe lúc checkbox 
+    check_cart.forEach(function(check, index){
+        check.onclick = function(){
+            console.log(sl_cart[index].value)
+            console.log(sl_cart[index].max)
+            //console.log(sl_cart[index])
+            // Ktra so luong trong gio be hơn số lượng tri=ong kho
+            if(Number(sl_cart[index].value) <= sl_cart[index].max && Number(sl_cart[index].value) > 0){
+                checkForm.action = URL.slice(32) + '/check/' + check.id + '/' + sl_cart[index].value + '/?_method=PUT'
+                checkForm.submit()
+            }
+            else{
+                confirm('Số lượng không hợp lệ!!!')
+                check.checked = false
+            }
+            
+        }
+    })
+
+    console.log(URL.slice(32))
+
+    checkAll_cart.onclick = function(){
+        if(checkAll_cart.checked)
+        checkForm.action = '/cart/user/' + URL.slice(32) + '/check/1/?_method=PUT'
+        else checkForm.action = '/cart/user/' + URL.slice(32) + '/check/0/?_method=PUT'
+        checkForm.submit()
+    }
+
+    plus.forEach(function(plus, index){
+        plus.onclick = function(){
+            console.log(sl_cart[index].value);
+            console.log(sl_cart[index].max);
+            if(Number(sl_cart[index].value) < Number(sl_cart[index].max)){
+                sl_cart[index].value++
+                delForm.action = URL.slice(32) + '/quantity/'+ check_cart[index].id + '/' + sl_cart[index].value + '?_method=PUT'
+                delForm.submit()
+            }
+        
+        else confirm('Số lượng đã tối đa!!!')
+        }
+    })
+    minus.forEach(function(minus, index){
+        minus.onclick = function(){
+            if(Number(sl_cart[index].value) > 1){
+                sl_cart[index].value--
+                delForm.action = URL.slice(32) + '/quantity/'+ check_cart[index].id + '/' + sl_cart[index].value + '?_method=PUT'
+                delForm.submit()
+            }
+            else confirm('Số lượng đã tối thiểu!!!')
+        }
+    })
+    
+})
+
+</script>

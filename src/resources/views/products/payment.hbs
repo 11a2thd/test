@@ -1,0 +1,196 @@
+<p style="display: none;">{{user_name}}</p>
+<main role="main">
+        <!-- Block content - Đục lỗ trên giao diện bố cục chung, đặt tên là `content` -->
+        <div class="container mt-4">
+
+                <div class="py-5 text-center">
+                    <h2>Thanh toán</h2>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-4 order-md-2 mb-4">
+                        <h4 class="d-flex justify-content-between align-items-center mb-3">
+                            <span class="" style="color: antiquewhite;">Giỏ hàng</span>
+                            <span class="badge badge-secondary badge-pill">{{buy.length}}</span>
+                        </h4>
+                        <ul class="list-group mb-3">
+                        {{#each buy}}
+                            <input type="hidden" name="sanphamgiohang[1][sp_ma]" value="2">
+                            <input type="hidden" name="sanphamgiohang[1][gia]" value="{{this.price}}">
+                            <input type="hidden" name="sanphamgiohang[1][soluong]" value="{{this.quantity.value}}">
+
+                            <li class="list-group-item d-flex justify-content-between lh-condensed">
+                                <div>
+                                    <h6 class="my-0">{{this.name}}</h6>
+                                    <small class="text-muted gia" value="{{this.price}}"></small>
+                                    <small class="text-muted soLuong"> x {{this.quantity.value}}</small>
+                                </div>
+                                <div>
+                                    <span class="text-muted giaxsoLuong" value="{{multiply this.price this.quantity.value}}"></span>
+                                    <span><sup> ₫</sup></span>
+                                </div>
+                                
+                            </li>
+                        {{/each}}
+                            <li class="list-group-item d-flex justify-content-between">
+                                <span>Tổng thành tiền: &nbsp;</span>
+                                <div>
+                                    <small style="display: none;" class="text-muted giam"><s><span class="total">0</span><sup>₫</sup></s></small>
+                                    <strong class="total"></strong><strong><sup> ₫</sup></strong>
+                                </div>
+                            </li>
+                        </ul>
+
+
+                        <div class="input-group">
+                            <div>
+                                <select style="padding: 0.375rem 21rem 0.375rem 0.75rem;" id="sales" class="form-select" aria-label="Default select example">
+                                    <option value="0" selected>-- Mã giảm giá --</option>
+                                    <option value="10">Giảm 10%</option>
+                                    <option value="15">Giảm 15%</option>
+                                    <option value="20">Giảm 20%</option>
+                                </select>
+                            </div>
+                        </div>
+                        <hr class="mb-1">
+                        <button class="btn btn-primary btn-lg btn-block" id="btnDatHang">
+                            Đặt hàng</button>
+
+                    </div>
+                    <div class="col-md-8 order-md-1">
+                        <h4 class="mb-3" style="color: antiquewhite;">Thông tin khách hàng</h4>
+                <form id="formPOST" method="POST">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <label for="kh_ten">Họ tên</label>
+                                <input type="text" class="form-control" name="kh_ten" id="kh_ten"
+                                    value="{{buy1.full_name}}">
+                            </div>
+                            <div class="col-md-12">
+                                <label for="kh_diachi">Địa chỉ</label>
+                                <input type="text" class="form-control" name="kh_diachi" id="kh_diachi"
+                                    value="{{buy1.address}}">
+                            </div>
+                            <div class="col-md-12">
+                                <label for="kh_dienthoai">Điện thoại</label>
+                                <input type="text" class="form-control" name="kh_dienthoai" id="kh_dienthoai"
+                                    value="{{buy1.phone}}">
+                            </div>
+                        </div>
+                </form>
+                        <h4 class="mb-3 mt-3" style="color: antiquewhite;">Hình thức thanh toán</h4>
+
+                        <div class="d-block my-3">
+                            <div class="custom-control custom-radio">
+                                <input id="httt-1" name="httt_ma" type="radio" class="custom-control-input" required=""
+                                    value="1">
+                                <label class="custom-control-label" for="httt-1">Tiền mặt</label>
+                            </div>
+                            <div class="custom-control custom-radio">
+                                <input id="httt-2" name="httt_ma" type="radio" class="custom-control-input" required=""
+                                    value="2">
+                                <label class="custom-control-label" for="httt-2">Chuyển khoản</label>
+                            </div>
+                        </div>
+                        
+                    </div>
+                </div>
+            
+
+        </div>
+        <!-- End block content -->
+    </main>
+<form id="formGET" method="GET"></form>
+
+<script>
+
+document.addEventListener('DOMContentLoaded', function(){
+
+    const formGET = document.getElementById('formGET');
+    const formPOST = document.getElementById('formPOST');
+    const datHang = document.getElementById('btnDatHang');
+    const gia = document.querySelectorAll('.gia')
+    const giaxsoLuong = document.querySelectorAll('.giaxsoLuong')
+    const total = document.querySelectorAll('.total')
+    const giam = document.querySelector('.giam')
+    const payments = document.querySelectorAll('.custom-control-input')
+    const sales = document.querySelector('#sales')
+    const form_control = document.querySelectorAll('.form-control')
+    const user_name = document.querySelector('p').innerHTML
+    
+    var temp = 0
+    var totalO = 0
+    var totalN = 0
+    
+    gia.forEach(function(gia, index) {
+        var a = gia.attributes[1].value
+        for(var i = a.length - 3; i > 0; i -= 3)
+        a = a.slice(0, i) + '.' + a.slice(i)
+
+        var b = giaxsoLuong[index].attributes[1].value
+        totalO += Number(b)
+        totalN = totalO
+        for(var i = b.length - 3; i > 0; i -= 3)
+        b = b.slice(0, i) + '.' + b.slice(i)
+        gia.innerHTML = a
+        giaxsoLuong[index].innerHTML = b
+    })
+    temp = String(totalO)
+    for(var i = temp.length - 3; i > 0; i -= 3)
+    temp = temp.slice(0, i) + '.' + temp.slice(i)
+    total[0].innerHTML = temp
+    total[1].innerHTML = temp
+
+    sales.onchange = function(){
+        if(sales.value === "0"){
+            giam.style.display = "none"
+            total[1].innerHTML = total[0].innerHTML
+        }
+        
+        else{
+            giam.style.display = "block"
+            temp = totalO
+            temp = (temp - ((temp * sales.value) / 100))
+            totalN = temp
+            temp = String(temp)
+            for(var i = temp.length - 3; i > 0; i -= 3)
+            temp = temp.slice(0, i) + '.' + temp.slice(i)
+            total[1].innerHTML = temp
+        }
+        
+    }
+
+
+
+    datHang.onclick = function() {
+
+        if(form_control[0].value === '')
+        return confirm('Hãy nhập họ và tên!!!')
+
+        if(form_control[1].value === '')
+        return confirm('Hãy nhập địa chỉ!!!')
+
+        if(form_control[2].value === '' )
+        return confirm('Hãy nhập số điện thoại!!!')
+
+        if(form_control[2].value.length !== 10)
+        return confirm('Số điện thoại không hợp lệ!!!')
+
+        for(var i = 0; i < payments.length; i++){
+            console.log(payments[i].checked === false)
+            if(payments[i].checked === false && i === (payments.length - 1)){
+                confirm('Hãy chọn hình thức thanh toán!!!')
+                break;
+            }
+            else if(payments[i].checked){
+                formPOST.action = user_name + '/' + totalN + '/' + payments[i].value
+                formPOST.submit()
+                break;
+            }
+        }
+        
+    }
+
+})
+
+</script>

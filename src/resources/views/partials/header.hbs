@@ -1,0 +1,112 @@
+<p style="display: none;">{{user_name}}</p>
+<header>
+  <nav class="navbar navbar-expand-lg navbar-dark bg-dark header">
+      <a id="home" class="navbar-brand" href="http://localhost:3000/">Shop máy ảnh</a>
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse positionAb" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item active">
+            
+          </li>
+          <input style="display: none;" type="text" placeholder="Tìm kiếm">
+          {{!-- <li class="nav-item">
+            <a class="nav-link" href="#">Link</a>
+          </li> --}}
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Dropdown
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+              {{!-- <a class="dropdown-item" href="/product/create">Thêm sản phẩm</a> --}}
+              <a style="display: none;" class="dropdown-item" href="/login">Đăng nhập</a>
+              <a style="display: none;" class="dropdown-item" href="/register">Đăng kí</a>
+              <a style="display: none;" class="dropdown-item" href="">Thông tin cá nhân</a>
+              <a style="display: none;" class="dropdown-item" href="">Lịch sử mua hàng</a>
+              <a style="display: none;" class="dropdown-item" href="/admin/management/users">Quản lý người dùng</a>
+              <a style="display: none;" class="dropdown-item" href="/product/admin/create">Thêm sản phẩm</a>
+              <a style="display: none;" class="dropdown-item" href="/admin/management/products">Quản lý sản phẩm</a>
+              <a style="display: none;" class="dropdown-item" href="/">Đăng xuất</a>
+              <div class="dropdown-divider"></div>
+              <a class="dropdown-item" href="https://www.youtube.com/watch?v=dQw4w9WgXcQ&pp=ygUXbmV2ZXIgZ29ubmEgZ2l2ZSB5b3UgdXA%3D">Something else here</a>
+            </div>
+          </li>
+          {{!-- <li class="nav-item">
+            <a class="nav-link disabled" href="#">Disabled</a>
+          </li> --}}
+        </ul>
+        <a class="nav-link header_Gh" style="color: aqua;" href="/cart/user">Giỏ Hàng<span class="sr-only"></span><sup class="sup" style="color: red;">&nbsp;{{buy.length}}</sup></a>
+      </div>
+    </nav>
+</header>
+
+<script>
+document.addEventListener('DOMContentLoaded', function(){
+  const URL = window.location.href
+  const drop = document.querySelectorAll('.dropdown-item')
+  const dropdown = document.querySelector('.dropdown')
+  const home = document.querySelector('#home')
+  const gh = document.querySelector('.header_Gh')
+  const user_name = document.querySelector('p').innerHTML
+  
+  
+  console.log(user_name)
+
+  if(document.querySelector('.sup').innerText == 0)
+  document.querySelector('.sup').style.display = 'none';
+
+  drop[0].style.display = 'block'
+  drop[1].style.display = 'block'
+  
+  console.log(home.attributes.href.value)
+  if(URL === 'http://localhost:3000/')
+  gh.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+  if(URL.includes('/user/')){
+    drop[0].style.display = 'none'
+    drop[1].style.display = 'none'
+    drop[2].style.display = 'block'
+    drop[3].style.display = 'block'
+    drop[4].style.display = 'none'
+    drop[5].style.display = 'none'
+    drop[6].style.display = 'none'
+    drop[7].style.display = 'block'
+    drop[2].attributes.href.value = '/user/' + user_name + '/info/see'
+    drop[3].attributes.href.value = '/order/user/' + user_name
+    gh.attributes.href.value = '/cart/user/' + user_name
+    home.attributes.href.value = '/user/' + user_name
+    if(URL.includes('/cart/')) home.attributes.href.value = 'http://localhost:3000/' + URL.slice(27)
+    if(URL.includes('/product/')){
+      home.attributes.href.value = 'http://localhost:3000/user/'+ user_name
+      gh.attributes.href.value = 'http://localhost:3000/cart/user/' + user_name
+    }
+  }else if(URL.includes('/admin/')){
+    drop[0].style.display = 'none'
+    drop[1].style.display = 'none'
+    drop[2].style.display = 'block'
+    drop[3].style.display = 'none'
+    drop[4].style.display = 'block'
+    drop[5].style.display = 'block'
+    drop[6].style.display = 'block'
+    drop[7].style.display = 'block'
+    gh.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+    home.attributes.href.value += URL.slice(22)
+    if(URL.includes('/product/')) home.attributes.href.value = 'http://localhost:3000/admin/'+ user_name
+  }
+  if(URL.includes('/login') || URL.includes('/register')){
+    drop[0].style.display = 'block'
+    drop[1].style.display = 'block'
+    drop[2].style.display = 'none'
+    drop[3].style.display = 'none'
+    drop[3].style.display = 'none'
+    drop[5].style.display = 'none'
+    drop[6].style.display = 'none'
+    drop[7].style.display = 'none'
+    gh.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+  }
+  if(URL.includes('/cart/'))
+  gh.innerHTML = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'
+
+})
+</script>
